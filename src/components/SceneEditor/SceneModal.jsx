@@ -184,18 +184,6 @@ const SceneModal = ({ nodeId, onClose }) => {
                                             placeholder="Character Name"
                                             style={{ marginBottom: '0.5rem' }}
                                         />
-                                        <div style={{
-                                            width: '40px',
-                                            height: '40px',
-                                            background: 'var(--color-accent-primary)',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            margin: '0 auto'
-                                        }}>
-                                            <span style={{ fontSize: '1.2rem' }}>{item.character.charAt(0) || '?'}</span>
-                                        </div>
                                     </div>
                                     <div style={{ flex: 1 }}>
                                         <textarea

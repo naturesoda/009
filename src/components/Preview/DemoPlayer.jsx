@@ -1,11 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare } from 'lucide-react';
+import useStoryStore from '../../store/storyStore';
 
-const DemoPlayer = ({ scene, onClose }) => {
-    if (!scene) return null;
-
-    const { dialogue, background, choices } = scene.data;
+const DemoPlayer = ({ scene, startNodeId, onClose }) => {
+    const { nodes, edges } = useStoryStore();
+    const [currentNode, setCurrentNode] = useState(scene ? { data: scene.data, id: 'preview' } : null);
     const [currentDialogueIndex, setCurrentDialogueIndex] = useState(0);
+
+    useEffect(() => {
+        if (startNodeId) {
+            const startNode = nodes.find(n => n.id === startNodeId);
+            if (startNode) {
+                setCurrentNode(startNode);
+                setCurrentDialogueIndex(0);
+            }
+        } else if (scene) {
+            // Preview mode
+            setCurrentNode({ data: scene.data, id: 'preview' });
+            setCurrentDialogueIndex(0);
+        }
+    }, [startNodeId, scene, nodes]);
+
+    if (!currentNode) return null;
+
+    const { dialogue, background, choices } = currentNode.data;
 
     // If no dialogue, show choices immediately (or handle empty case)
     const dialogues = dialogue && dialogue.length > 0 ? dialogue : [{ character: 'System', text: '...' }];
@@ -15,6 +33,33 @@ const DemoPlayer = ({ scene, onClose }) => {
     const handleAdvance = () => {
         if (!isLastLine) {
             setCurrentDialogueIndex(prev => prev + 1);
+        }
+    };
+
+    const handleChoiceClick = (choiceIndex) => {
+        if (startNodeId) {
+            // Full game mode: find next node
+            // We need to find the edge that starts from this node's handle corresponding to the choice
+            // The handle ID for choice index i is `choice-${i}`
+            const sourceHandleId = `choice-${choiceIndex}`;
+            const edge = edges.find(e =>
+                e.source === currentNode.id &&
+                e.sourceHandle === sourceHandleId
+            );
+
+            if (edge) {
+                const nextNode = nodes.find(n => n.id === edge.target);
+                if (nextNode) {
+                    setCurrentNode(nextNode);
+                    setCurrentDialogueIndex(0);
+                }
+            } else {
+                console.log("No connection found for this choice");
+                // Optional: Show "End of Demo" or stay
+            }
+        } else {
+            // Preview mode: just log or do nothing
+            console.log("Preview mode: Choice clicked", choiceIndex);
         }
     };
 
@@ -64,19 +109,6 @@ const DemoPlayer = ({ scene, onClose }) => {
                 onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
-                    <div style={{
-                        width: '50px',
-                        height: '50px',
-                        background: 'var(--color-accent-primary)',
-                        borderRadius: '50%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold'
-                    }}>
-                        {currentLine.character ? currentLine.character.charAt(0) : <MessageSquare color="white" />}
-                    </div>
                     <div style={{ flex: 1 }}>
                         <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-accent-primary)' }}>
                             {currentLine.character || '???'}
@@ -103,6 +135,10 @@ const DemoPlayer = ({ scene, onClose }) => {
                                 key={index}
                                 className="btn-primary"
                                 style={{ flex: '1 1 auto' }}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleChoiceClick(index);
+                                }}
                             >
                                 {choice.label}
                             </button>

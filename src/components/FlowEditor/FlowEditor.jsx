@@ -10,6 +10,7 @@ import 'reactflow/dist/style.css';
 import useStoryStore from '../../store/storyStore';
 import SceneNode from './SceneNode';
 import SceneModal from '../SceneEditor/SceneModal';
+import DemoPlayer from '../Preview/DemoPlayer';
 
 const nodeTypes = {
     sceneNode: SceneNode,
@@ -26,6 +27,7 @@ const FlowEditor = () => {
     } = useStoryStore();
 
     const [selectedNodeId, setSelectedNodeId] = React.useState(null);
+    const [isPlaying, setIsPlaying] = React.useState(false);
 
     const handleNodeClick = useCallback((event, node) => {
         setSelectedNodeId(node.id);
@@ -53,18 +55,21 @@ const FlowEditor = () => {
 
     return (
         <div style={{ width: '100vw', height: '100vh', background: 'var(--color-bg-primary)' }}>
-            <button
-                className="btn-primary"
-                style={{
-                    position: 'absolute',
-                    top: '20px',
-                    left: '20px',
-                    zIndex: 100
-                }}
-                onClick={handleAddNode}
-            >
-                Add Scene
-            </button>
+            <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 100, display: 'flex', gap: '10px' }}>
+                <button
+                    className="btn-primary"
+                    onClick={handleAddNode}
+                >
+                    Add Scene
+                </button>
+                <button
+                    className="btn-secondary"
+                    onClick={() => setIsPlaying(true)}
+                    style={{ background: 'var(--color-success)', color: 'white' }}
+                >
+                    ▶ Full Game Demo
+                </button>
+            </div>
 
             <ReactFlow
                 nodes={nodes}
@@ -88,6 +93,13 @@ const FlowEditor = () => {
                 <SceneModal
                     nodeId={selectedNodeId}
                     onClose={handleCloseModal}
+                />
+            )}
+
+            {isPlaying && (
+                <DemoPlayer
+                    startNodeId="start"
+                    onClose={() => setIsPlaying(false)}
                 />
             )}
         </div>
