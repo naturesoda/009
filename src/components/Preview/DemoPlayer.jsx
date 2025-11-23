@@ -23,7 +23,21 @@ const DemoPlayer = ({ scene, startNodeId, onClose }) => {
 
     if (!currentNode) return null;
 
-    const { dialogue, background, choices } = currentNode.data;
+    const { dialogue, background, choices, dialogueBoxStyle } = currentNode.data;
+
+    // Helper to convert hex to rgba
+    const getRgba = (hex, alpha) => {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    const boxColor = dialogueBoxStyle?.color || '#000000';
+    const boxAlpha = dialogueBoxStyle?.alpha !== undefined ? dialogueBoxStyle.alpha : 0.8;
+    const boxBackground = getRgba(boxColor, boxAlpha);
+    const textColor = boxColor === '#ffffff' ? '#000000' : '#ffffff';
+    const accentColor = boxColor === '#ffffff' ? 'var(--color-accent-primary)' : 'var(--color-accent-primary)'; // Keep accent for now
 
     // If no dialogue, show choices immediately (or handle empty case)
     const dialogues = dialogue && dialogue.length > 0 ? dialogue : [{ character: 'System', text: '...' }];
@@ -120,13 +134,16 @@ const DemoPlayer = ({ scene, startNodeId, onClose }) => {
                     minHeight: '150px',
                     cursor: !isLastLine ? 'pointer' : 'default',
                     transition: 'transform 0.1s',
+                    background: boxBackground,
+                    color: textColor,
+                    border: '1px solid rgba(255,255,255,0.1)'
                 }}
                 onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.99)'}
                 onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
             >
                 <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
                     <div style={{ flex: 1 }}>
-                        <h3 style={{ marginBottom: '0.5rem', color: 'var(--color-accent-primary)' }}>
+                        <h3 style={{ marginBottom: '0.5rem', color: accentColor }}>
                             {currentLine.character || '???'}
                         </h3>
                         <p style={{ fontSize: '1.1rem', lineHeight: '1.6' }}>{currentLine.text}</p>
@@ -134,7 +151,7 @@ const DemoPlayer = ({ scene, startNodeId, onClose }) => {
                             <div style={{
                                 textAlign: 'right',
                                 fontSize: '0.8rem',
-                                color: 'var(--color-accent-primary)',
+                                color: accentColor,
                                 marginTop: '0.5rem',
                                 animation: 'pulse 1s infinite'
                             }}>
@@ -145,7 +162,7 @@ const DemoPlayer = ({ scene, startNodeId, onClose }) => {
                 </div>
 
                 {isLastLine && choices && choices.length > 0 && (
-                    <div className="choices-container" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
+                    <div className="choices-container" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '1rem', borderTop: `1px solid ${textColor === '#ffffff' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`, paddingTop: '1rem' }}>
                         {choices.map((choice, index) => (
                             <button
                                 key={index}

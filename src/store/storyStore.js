@@ -9,9 +9,10 @@ const useStoryStore = create((set, get) => ({
       position: { x: 250, y: 25 },
       data: {
         label: 'Start Scene',
-        dialogue: [{ character: 'Narrator', text: 'This is the beginning of your story.' }],
+        dialogue: [{ character: 'System', text: 'Welcome to your new story!' }],
         background: '',
-        choices: []
+        choices: [],
+        dialogueBoxStyle: { color: '#000000', alpha: 0.8 }
       },
     },
   ],

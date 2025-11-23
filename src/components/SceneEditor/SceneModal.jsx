@@ -11,7 +11,8 @@ const SceneModal = ({ nodeId, onClose }) => {
         label: '',
         dialogue: [], // Changed from text to dialogue array
         background: '',
-        choices: []
+        choices: [],
+        dialogueBoxStyle: { color: '#000000', alpha: 0.8 }
     });
 
     const [showPreview, setShowPreview] = useState(false);
@@ -22,7 +23,8 @@ const SceneModal = ({ nodeId, onClose }) => {
                 label: node.data.label || '',
                 dialogue: node.data.dialogue || [{ character: 'Narrator', text: node.data.text || '' }], // Migrate old text to new format
                 background: node.data.background || '',
-                choices: node.data.choices || []
+                choices: node.data.choices || [],
+                dialogueBoxStyle: node.data.dialogueBoxStyle || { color: '#000000', alpha: 0.8 }
             });
         }
     }, [node]);
@@ -162,6 +164,50 @@ const SceneModal = ({ nodeId, onClose }) => {
                         )}
                     </div>
 
+                    {/* Dialogue Style Editor */}
+                    <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--color-text-secondary)' }}>Dialogue Box Style</label>
+
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1rem' }}>
+                            <div style={{ flex: 1 }}>
+                                <label style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }}>Color</label>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    {['#000000', '#1e293b', '#475569', '#ffffff', '#ef4444', '#3b82f6', '#10b981'].map(color => (
+                                        <button
+                                            key={color}
+                                            onClick={() => handleChange('dialogueBoxStyle', { ...formData.dialogueBoxStyle, color })}
+                                            style={{
+                                                width: '24px',
+                                                height: '24px',
+                                                borderRadius: '50%',
+                                                background: color,
+                                                border: formData.dialogueBoxStyle?.color === color ? '2px solid var(--color-accent-primary)' : '1px solid var(--color-border)',
+                                                cursor: 'pointer',
+                                                padding: 0
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div style={{ flex: 1 }}>
+                                <label style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem', display: 'block' }}>
+                                    Opacity: {Math.round((formData.dialogueBoxStyle?.alpha || 0.8) * 100)}%
+                                </label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1"
+                                    step="0.1"
+                                    value={formData.dialogueBoxStyle?.alpha || 0.8}
+                                    onChange={(e) => handleChange('dialogueBoxStyle', { ...formData.dialogueBoxStyle, alpha: parseFloat(e.target.value) })}
+                                    style={{ width: '100%' }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dialogue Editor */}
                     <div className="form-group" style={{ marginBottom: '1.5rem' }}>
                         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem', color: 'var(--color-text-secondary)' }}>
                             <MessageSquare size={16} /> Dialogue (SNS Style)

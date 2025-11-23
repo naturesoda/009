@@ -48,7 +48,8 @@ const FlowEditor = () => {
                 label: 'New Scene',
                 dialogue: [],
                 background: '',
-                choices: []
+                choices: [],
+                dialogueBoxStyle: { color: '#000000', alpha: 0.8 }
             },
         };
         addNode(newNode);
