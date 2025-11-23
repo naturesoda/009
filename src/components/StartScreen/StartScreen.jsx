@@ -63,7 +63,7 @@ const StartScreen = ({ onNavigate }) => {
                 </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '2rem' }}>
+            <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <button
                         className="glass-panel"

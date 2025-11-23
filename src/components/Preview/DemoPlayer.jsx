@@ -33,6 +33,22 @@ const DemoPlayer = ({ scene, startNodeId, onClose }) => {
     const handleAdvance = () => {
         if (!isLastLine) {
             setCurrentDialogueIndex(prev => prev + 1);
+        } else if (!choices || choices.length === 0) {
+            // Try to auto-advance if there are no choices
+            if (startNodeId) {
+                const edge = edges.find(e =>
+                    e.source === currentNode.id &&
+                    (e.sourceHandle === 'default-source' || e.sourceHandle === null)
+                );
+
+                if (edge) {
+                    const nextNode = nodes.find(n => n.id === edge.target);
+                    if (nextNode) {
+                        setCurrentNode(nextNode);
+                        setCurrentDialogueIndex(0);
+                    }
+                }
+            }
         }
     };
 

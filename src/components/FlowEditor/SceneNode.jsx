@@ -49,6 +49,7 @@ const SceneNode = ({ data, isConnectable }) => {
                 <Handle
                     type="source"
                     position={Position.Bottom}
+                    id="default-source"
                     isConnectable={isConnectable}
                     style={{ background: 'var(--color-accent-primary)' }}
                 />
