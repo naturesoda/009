@@ -11,6 +11,7 @@ import useStoryStore from '../../store/storyStore';
 import SceneNode from './SceneNode';
 import SceneModal from '../SceneEditor/SceneModal';
 import DemoPlayer from '../Preview/DemoPlayer';
+import { saveGame } from '../../utils/fileUtils';
 
 const nodeTypes = {
     sceneNode: SceneNode,
@@ -68,6 +69,13 @@ const FlowEditor = () => {
                     style={{ background: 'var(--color-success)', color: 'white' }}
                 >
                     ▶ Full Game Demo
+                </button>
+                <button
+                    className="btn-secondary"
+                    onClick={() => saveGame({ nodes, edges }, 'my-novel-game.json')}
+                    style={{ background: 'var(--color-accent-primary)', color: 'white' }}
+                >
+                    💾 Save Game
                 </button>
             </div>
 

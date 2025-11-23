@@ -37,6 +37,10 @@ const useStoryStore = create((set, get) => ({
     set({ nodes: [...get().nodes, node] });
   },
 
+  setStory: (nodes, edges) => {
+    set({ nodes, edges });
+  },
+
   updateNodeData: (nodeId, data) => {
     set({
       nodes: get().nodes.map((node) => {
