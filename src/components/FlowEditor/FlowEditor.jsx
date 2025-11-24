@@ -65,6 +65,23 @@ const FlowEditor = ({ onExit }) => {
         }
     };
 
+    // Prevent accidental browser navigation
+    React.useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (nodes.length > 0) {
+                e.preventDefault();
+                e.returnValue = ''; // Chrome requires returnValue to be set
+                return '';
+            }
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [nodes]);
+
     return (
         <div style={{ width: '100vw', height: '100vh', background: 'var(--color-bg-primary)' }}>
             {/* Fixed Header Bar */}
