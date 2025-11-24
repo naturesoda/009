@@ -18,19 +18,7 @@ function App() {
 
       {view === 'editor' && (
         <>
-          <button
-            className="btn-secondary"
-            onClick={() => setView('start')}
-            style={{
-              position: 'absolute',
-              top: '20px',
-              right: '20px',
-              zIndex: 1000
-            }}
-          >
-            Exit to Title
-          </button>
-          <FlowEditor />
+          <FlowEditor onExit={() => setView('start')} />
         </>
       )}
 

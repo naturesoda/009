@@ -17,7 +17,7 @@ const nodeTypes = {
     sceneNode: SceneNode,
 };
 
-const FlowEditor = () => {
+const FlowEditor = ({ onExit }) => {
     const {
         nodes,
         edges,
@@ -55,28 +55,63 @@ const FlowEditor = () => {
         addNode(newNode);
     };
 
+    const handleExit = () => {
+        if (nodes.length > 0) {
+            if (window.confirm('Unsaved changes may be lost. Are you sure you want to exit?')) {
+                onExit();
+            }
+        } else {
+            onExit();
+        }
+    };
+
     return (
         <div style={{ width: '100vw', height: '100vh', background: 'var(--color-bg-primary)' }}>
-            <div style={{ position: 'absolute', top: '20px', left: '20px', zIndex: 100, display: 'flex', gap: '10px' }}>
-                <button
-                    className="btn-primary"
-                    onClick={handleAddNode}
-                >
-                    Add Scene
-                </button>
+            {/* Fixed Header Bar */}
+            <div style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '60px',
+                background: 'rgba(15, 23, 42, 0.9)',
+                backdropFilter: 'blur(10px)',
+                borderBottom: '1px solid var(--color-border)',
+                zIndex: 1000,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 20px'
+            }}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button
+                        className="btn-primary"
+                        onClick={handleAddNode}
+                    >
+                        + Scene
+                    </button>
+                    <button
+                        className="btn-secondary"
+                        onClick={() => setIsPlaying(true)}
+                        style={{ background: 'var(--color-success)', color: 'white' }}
+                    >
+                        ▶ Play
+                    </button>
+                    <button
+                        className="btn-secondary"
+                        onClick={() => saveGame({ nodes, edges }, 'my-novel-game.json')}
+                        style={{ background: 'var(--color-accent-primary)', color: 'white' }}
+                    >
+                        💾 Save
+                    </button>
+                </div>
+
                 <button
                     className="btn-secondary"
-                    onClick={() => setIsPlaying(true)}
-                    style={{ background: 'var(--color-success)', color: 'white' }}
+                    onClick={handleExit}
+                    style={{ color: 'var(--color-danger)', borderColor: 'var(--color-danger)' }}
                 >
-                    ▶ Full Game Demo
-                </button>
-                <button
-                    className="btn-secondary"
-                    onClick={() => saveGame({ nodes, edges }, 'my-novel-game.json')}
-                    style={{ background: 'var(--color-accent-primary)', color: 'white' }}
-                >
-                    💾 Save Game
+                    Exit
                 </button>
             </div>
 
