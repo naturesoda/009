@@ -98,28 +98,41 @@ const FlowEditor = ({ onExit }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '0 20px'
+                padding: '0 20px',
+                boxSizing: 'border-box' // Ensure padding doesn't affect width
             }}>
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingRight: '10px' }}>
+                    {/* Mobile-friendly buttons wrapper */}
+                    <style>
+                        {`
+                            @media (max-width: 600px) {
+                                .header-btn-text { display: none; }
+                                .btn-primary, .btn-secondary { padding: 8px 12px !important; }
+                            }
+                        `}
+                    </style>
                     <button
                         className="btn-primary"
                         onClick={handleAddNode}
+                        title="Add Scene"
                     >
-                        + Scene
+                        + <span className="header-btn-text">Scene</span>
                     </button>
                     <button
                         className="btn-secondary"
                         onClick={() => setIsPlaying(true)}
                         style={{ background: 'var(--color-success)', color: 'white' }}
+                        title="Play"
                     >
-                        ▶ Play
+                        ▶ <span className="header-btn-text">Play</span>
                     </button>
                     <button
                         className="btn-secondary"
                         onClick={() => saveGame({ nodes, edges }, 'my-novel-game.json')}
                         style={{ background: 'var(--color-accent-primary)', color: 'white' }}
+                        title="Save"
                     >
-                        💾 Save
+                        💾 <span className="header-btn-text">Save</span>
                     </button>
                 </div>
 
@@ -127,6 +140,7 @@ const FlowEditor = ({ onExit }) => {
                     className="btn-secondary"
                     onClick={handleExit}
                     style={{ color: 'var(--color-danger)', borderColor: 'var(--color-danger)' }}
+                    title="Exit"
                 >
                     Exit
                 </button>
@@ -141,6 +155,8 @@ const FlowEditor = ({ onExit }) => {
                 onNodeClick={handleNodeClick}
                 nodeTypes={nodeTypes}
                 fitView
+                minZoom={0.1}
+                maxZoom={4}
             >
                 <Background color="#334155" gap={16} />
                 <MiniMap

@@ -15,7 +15,12 @@ const SceneNode = ({ data, isConnectable }) => {
                 type="target"
                 position={Position.Top}
                 isConnectable={isConnectable}
-                style={{ background: 'var(--color-accent-primary)' }}
+                style={{
+                    background: 'var(--color-accent-primary)',
+                    width: '12px',
+                    height: '12px',
+                    top: '-6px'
+                }}
             />
 
             <div className="node-header" style={{
@@ -51,7 +56,12 @@ const SceneNode = ({ data, isConnectable }) => {
                     position={Position.Bottom}
                     id="default-source"
                     isConnectable={isConnectable}
-                    style={{ background: 'var(--color-accent-primary)' }}
+                    style={{
+                        background: 'var(--color-accent-primary)',
+                        width: '12px',
+                        height: '12px',
+                        bottom: '-6px'
+                    }}
                 />
             )}
 
@@ -64,7 +74,13 @@ const SceneNode = ({ data, isConnectable }) => {
                         position={Position.Right}
                         id={`choice-${index}`}
                         isConnectable={isConnectable}
-                        style={{ top: '50%', background: 'var(--color-success)' }}
+                        style={{
+                            top: '50%',
+                            background: 'var(--color-success)',
+                            width: '12px',
+                            height: '12px',
+                            right: '-6px'
+                        }}
                     />
                 </div>
             ))}
