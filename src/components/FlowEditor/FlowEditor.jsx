@@ -65,6 +65,29 @@ const FlowEditor = ({ onExit }) => {
         }
     };
 
+    // Edge Deletion Logic
+    const lastEdgeClickRef = React.useRef(0);
+
+    const handleEdgeAction = (edge) => {
+        if (window.confirm('Disconnect this scene?')) {
+            onEdgesChange([{ id: edge.id, type: 'remove' }]);
+        }
+    };
+
+    const onEdgeClick = React.useCallback((event, edge) => {
+        const now = Date.now();
+        if (now - lastEdgeClickRef.current < 300) {
+            // Double click detected
+            handleEdgeAction(edge);
+        }
+        lastEdgeClickRef.current = now;
+    }, [onEdgesChange]);
+
+    const onEdgeContextMenu = React.useCallback((event, edge) => {
+        event.preventDefault();
+        handleEdgeAction(edge);
+    }, [onEdgesChange]);
+
     // Prevent accidental browser navigation
     React.useEffect(() => {
         const handleBeforeUnload = (e) => {
@@ -153,6 +176,8 @@ const FlowEditor = ({ onExit }) => {
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 onNodeClick={handleNodeClick}
+                onEdgeClick={onEdgeClick}
+                onEdgeContextMenu={onEdgeContextMenu}
                 nodeTypes={nodeTypes}
                 fitView
                 minZoom={0.1}
